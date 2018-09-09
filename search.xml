@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title><![CDATA[Hello World]]></title>
+    <url>%2F2018%2F09%2F08%2Fhello-world%2F</url>
+    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server ` java/* Solo - A small and beautiful blogging system written in Java. Copyright (c) 2010-2018, b3log.org &amp; hacpai.com* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more detail]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[test/markdown]]></title>
+    <url>%2F2018%2F09%2F07%2Ftest-markdown%2F</url>
+    <content type="text"><![CDATA[这个是我的第二篇博客]]></content>
+  </entry>
+  <entry>
+    <title><![CDATA[hexo.md]]></title>
+    <url>%2F2018%2F09%2F07%2Fhexo-md%2F</url>
+    <content type="text"></content>
+  </entry>
+</search>
