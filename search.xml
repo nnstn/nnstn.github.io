@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title><![CDATA[Hello World]]></title>
-    <url>%2F2018%2F09%2F08%2Fhello-world%2F</url>
-    <content type="text"><![CDATA[Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new "My New Post" More info: Writing Run server1$ hexo server ` java/* Solo - A small and beautiful blogging system written in Java. Copyright (c) 2010-2018, b3log.org &amp; hacpai.com* This program is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.* This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more detail]]></content>
+    <title><![CDATA[业务限流]]></title>
+    <url>%2F2018%2F09%2F10%2Fratelimit%2F</url>
+    <content type="text"><![CDATA[业务限流在web应用中，同一时间有大量的客户端请求同时发送到服务器，例如抢购、秒杀等。这个时候如何避免将大量的请求同时发送到业务系统。造成避免服务器瘫痪宕机 第一种方法：在容器中配置最大请求数，如果大于改请求数，则客户端阻塞。该方法有效的阻止了大量的请求同时访问业务系统，但对用户不友好。 第二种方法：使用过滤器，保证一定数量的请求能够正常访问系统，多余的请求先跳转到排队页面，由排队页面定时发起请求。过滤器实现如下： 12345678910111213141516171819public class ServiceFilter implements Filter &#123; private static final int MAX_COUNT = 20; private AtomicInteger filterCount = 0; public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException &#123; System.out.println("before"+filterCount); if(filterCount &gt; MAX_COUNT) &#123; //请求个数太多，跳转到排队页面 request.getRequestDispatcher("index.jsp").forward(request, response); &#125; else &#123; //请求个数加1 filterCount.incrementAndGet(); chain.doFilter(request, response); //访问结束，请求个数减1 filterCount.decrementAndGet(); &#125; &#125;]]></content>
+      <tags>
+        <tag>java</tag>
+      </tags>
   </entry>
   <entry>
-    <title><![CDATA[test/markdown]]></title>
-    <url>%2F2018%2F09%2F07%2Ftest-markdown%2F</url>
-    <content type="text"><![CDATA[这个是我的第二篇博客]]></content>
+    <title></title>
+    <url>%2F2018%2F09%2F09%2FGitHub%E7%A7%98%E9%92%A5%E9%85%8D%E7%BD%AE%2F</url>
+    <content type="text"><![CDATA[##windows ###使用git bash打开客户端 git config –global user.name “nnstn” git config –global user.email “wangjn1130@163.com“ ###使用git bash打开客户端 ssh-keygen -t rsa -C “wangjn1130@163.com“ ssh\id_rsa.pub 信息拷贝到 github主页&gt;个人设置 -&gt; SSH and GPG keys -&gt; New SSH key ###测试 ssh -T git@github.com # 注意邮箱地址不用改 ##Linux 类似window]]></content>
   </entry>
   <entry>
-    <title><![CDATA[hexo.md]]></title>
-    <url>%2F2018%2F09%2F07%2Fhexo-md%2F</url>
-    <content type="text"></content>
+    <title></title>
+    <url>%2F2018%2F09%2F09%2Fpingpoint%E5%AE%89%E8%A3%85%2F</url>
+    <content type="text"><![CDATA[##相关资源https://www.cnblogs.com/yyhh/p/6106472.html]]></content>
+  </entry>
+  <entry>
+    <title></title>
+    <url>%2F2018%2F09%2F09%2Fhexo%E4%BD%BF%E7%94%A8%2F</url>
+    <content type="text"><![CDATA[hexo和next文档http://theme-next.iissnan.com/ https://blog.csdn.net/xuezhisdc/article/details/53130328 https://blog.csdn.net/ganzhilin520/article/details/79047249 https://www.56.com/w37/album-aid-14469290.html https://blog.csdn.net/sunshine940326/article/details/70936988 https://www.jianshu.com/p/68e727dda16d hexo编辑器：https://github.com/tajpure/hexo-editor 安装hexonpm install hexo-cli g 初始化博客文件夹 hexo init notes 切换到该路径 cd notes 安装hexo的扩展插件 npm install 安装其它插件 npm install hexo-server --save npm install hexo-admin --save npm install hexo-generator-archive --save npm install hexo-generator-feed --save npm install hexo-generator-search --save npm install hexo-generator-tag --save npm install hexo-deployer-git --save npm install hexo-generator-sitemap --save 部署npm install hexo-deployer-git --save deploy: type: git repo: git@github.com:nnstn/nnstn.github.io.git branch: master hexo d #hexo deploy]]></content>
   </entry>
 </search>

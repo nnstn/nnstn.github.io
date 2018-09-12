@@ -257,7 +257,7 @@
         
           
           <li class="menu-item menu-item-search">
-    <a href="/search/" rel="section">
+    <a href="/search" rel="section">
       <i class="menu-item-icon fa fa-fw fa-search"></i> <br />搜索</a>
   </li>
         
@@ -364,7 +364,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/08/hello-world/">
+    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/10/ratelimit/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王晶南">
@@ -383,8 +383,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/08/hello-world/" itemprop="url">
-                  Hello World
+                <a class="post-title-link" href="/2018/09/10/ratelimit/" itemprop="url">
+                  业务限流
                 </a>
               
             
@@ -410,9 +410,13 @@
                 
               
 
-              <time title="创建时间：2018-09-08 22:18:34" itemprop="dateCreated datePublished" datetime="2018-09-08T22:18:34+08:00">2018-09-08</time>
+              <time title="创建时间：2018-09-10 13:15:28 / 修改时间：13:52:07" itemprop="dateCreated datePublished" datetime="2018-09-10T13:15:28+08:00">2018-09-10</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -446,23 +450,14 @@
       
         
           
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p><code>`</code> java<br>/*</p>
-<ul>
-<li>Solo - A small and beautiful blogging system written in Java.</li>
-<li>Copyright (c) 2010-2018, b3log.org &amp; hacpai.com<br>*</li>
-<li>This program is free software: you can redistribute it and/or modify</li>
-<li>it under the terms of the GNU Affero General Public License as published by</li>
-<li>the Free Software Foundation, either version 3 of the License, or</li>
-<li>(at your option) any later version.<br>*</li>
-<li>This program is distributed in the hope that it will be useful,</li>
-<li>but WITHOUT ANY WARRANTY; without even the implied warranty of</li>
-<li>MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</li>
-<li>GNU Affero General Public License for more detail</li>
-</ul>
+            <h2 id="业务限流"><a href="#业务限流" class="headerlink" title="业务限流"></a>业务限流</h2><p>在web应用中，同一时间有大量的客户端请求同时发送到服务器，例如抢购、秒杀等。这个时候如何避免将大量的请求同时发送到业务系统。造成避免服务器瘫痪宕机</p>
+<blockquote>
+<p>第一种方法：在容器中配置最大请求数，如果大于改请求数，则客户端阻塞。该方法有效的阻止了大量的请求同时访问业务系统，但对用户不友好。</p>
+</blockquote>
+<blockquote>
+<p>第二种方法：使用过滤器，保证一定数量的请求能够正常访问系统，多余的请求先跳转到排队页面，由排队页面定时发起请求。过滤器实现如下：</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ServiceFilter</span> <span class="keyword">implements</span> <span class="title">Filter</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> MAX_COUNT = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">private</span> AtomicInteger filterCount = <span class="number">0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">doFilter</span><span class="params">(ServletRequest request, ServletResponse response,</span></span></span><br><span class="line"><span class="function"><span class="params">            FilterChain chain)</span> <span class="keyword">throws</span> IOException, ServletException </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">"before"</span>+filterCount);</span><br><span class="line">        <span class="keyword">if</span>(filterCount &gt; MAX_COUNT) &#123;</span><br><span class="line">            <span class="comment">//请求个数太多，跳转到排队页面</span></span><br><span class="line">            request.getRequestDispatcher(<span class="string">"index.jsp"</span>).forward(request, response);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">//请求个数加1</span></span><br><span class="line">            filterCount.incrementAndGet();</span><br><span class="line"> </span><br><span class="line">            chain.doFilter(request, response);</span><br><span class="line">            <span class="comment">//访问结束，请求个数减1</span></span><br><span class="line">          </span><br><span class="line">  filterCount.decrementAndGet();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 
           
         
@@ -516,7 +511,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/07/test-markdown/">
+    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/09/GitHub秘钥配置/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王晶南">
@@ -535,8 +530,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/07/test-markdown/" itemprop="url">
-                  test/markdown
+                <a class="post-title-link" href="/2018/09/09/GitHub秘钥配置/" itemprop="url">
+                  未命名
                 </a>
               
             
@@ -562,24 +557,12 @@
                 
               
 
-              <time title="创建时间：2018-09-07 20:05:00" itemprop="dateCreated datePublished" datetime="2018-09-07T20:05:00+08:00">2018-09-07</time>
+              <time title="创建时间：2018-09-09 23:24:21 / 修改时间：23:11:34" itemprop="dateCreated datePublished" datetime="2018-09-09T23:24:21+08:00">2018-09-09</time>
             
 
             
               
 
-              
-                
-                <span class="post-meta-divider">|</span>
-                
-
-                <span class="post-meta-item-icon">
-                  <i class="fa fa-calendar-check-o"></i>
-                </span>
-                
-                  <span class="post-meta-item-text">更新于</span>
-                
-                <time title="修改时间：2018-09-08 22:19:39" itemprop="dateModified" datetime="2018-09-08T22:19:39+08:00">2018-09-08</time>
               
             
           </span>
@@ -614,7 +597,11 @@
       
         
           
-            <p>这个是我的第二篇博客</p>
+            <p>##windows</p>
+<p>###使用git bash打开客户端<br>    git config –global user.name “nnstn”<br>    git config –global user.email “<a href="mailto:wangjn1130@163.com" target="_blank" rel="noopener">wangjn1130@163.com</a>“</p>
+<p>###使用git bash打开客户端<br>    ssh-keygen -t rsa -C “<a href="mailto:wangjn1130@163.com" target="_blank" rel="noopener">wangjn1130@163.com</a>“<br>    ssh\id_rsa.pub 信息拷贝到 github主页&gt;个人设置 -&gt; SSH and GPG keys -&gt; New SSH key</p>
+<p>###测试<br>    ssh -T <a href="mailto:git@github.com" target="_blank" rel="noopener">git@github.com</a> # 注意邮箱地址不用改</p>
+<p>##Linux<br>    类似window</p>
 
           
         
@@ -668,7 +655,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/07/hexo-md/">
+    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/09/pingpoint安装/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="王晶南">
@@ -687,8 +674,8 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/07/hexo-md/" itemprop="url">
-                  hexo.md
+                <a class="post-title-link" href="/2018/09/09/pingpoint安装/" itemprop="url">
+                  未命名
                 </a>
               
             
@@ -714,9 +701,13 @@
                 
               
 
-              <time title="创建时间：2018-09-07 18:35:18" itemprop="dateCreated datePublished" datetime="2018-09-07T18:35:18+08:00">2018-09-07</time>
+              <time title="创建时间：2018-09-09 23:24:21 / 修改时间：22:47:36" itemprop="dateCreated datePublished" datetime="2018-09-09T23:24:21+08:00">2018-09-09</time>
             
 
+            
+              
+
+              
             
           </span>
 
@@ -750,7 +741,178 @@
       
         
           
+            <p>##相关资源<br><a href="https://www.cnblogs.com/yyhh/p/6106472.html" target="_blank" rel="noopener">https://www.cnblogs.com/yyhh/p/6106472.html</a></p>
+
+          
+        
+      
+    </div>
+
+    
+
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://blog.nnstn.com/2018/09/09/hexo使用/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="王晶南">
+      <meta itemprop="description" content="技术 品牌 创新 文化">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="技术博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/09/09/hexo使用/" itemprop="url">
+                  未命名
+                </a>
+              
             
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+
+            
+            
+            
+
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+
+              
+                
+              
+
+              <time title="创建时间：2018-09-09 23:24:21 / 修改时间：23:16:46" itemprop="dateCreated datePublished" datetime="2018-09-09T23:24:21+08:00">2018-09-09</time>
+            
+
+            
+              
+
+              
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="hexo和next文档"><a href="#hexo和next文档" class="headerlink" title="hexo和next文档"></a>hexo和next文档</h2><pre><code>http://theme-next.iissnan.com/
+https://blog.csdn.net/xuezhisdc/article/details/53130328
+https://blog.csdn.net/ganzhilin520/article/details/79047249
+https://www.56.com/w37/album-aid-14469290.html
+https://blog.csdn.net/sunshine940326/article/details/70936988
+https://www.jianshu.com/p/68e727dda16d
+hexo编辑器：https://github.com/tajpure/hexo-editor
+</code></pre><h2 id="安装hexo"><a href="#安装hexo" class="headerlink" title="安装hexo"></a>安装hexo</h2><pre><code>npm install hexo-cli g
+初始化博客文件夹
+hexo init notes
+切换到该路径
+cd notes
+安装hexo的扩展插件
+npm install
+安装其它插件
+npm install hexo-server --save
+npm install hexo-admin --save
+npm install hexo-generator-archive --save
+npm install hexo-generator-feed --save
+npm install hexo-generator-search --save
+npm install hexo-generator-tag --save
+npm install hexo-deployer-git --save
+npm install hexo-generator-sitemap --save
+</code></pre><h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><pre><code>npm install hexo-deployer-git --save
+
+deploy:
+  type: git
+  repo: git@github.com:nnstn/nnstn.github.io.git
+  branch: master
+
+hexo d  #hexo deploy
+</code></pre>
           
         
       
@@ -835,7 +997,7 @@
                 
                   <a href="/archives/">
                 
-                    <span class="site-state-item-count">3</span>
+                    <span class="site-state-item-count">4</span>
                     <span class="site-state-item-name">日志</span>
                   </a>
                 </div>
@@ -843,6 +1005,19 @@
 
               
 
+              
+                
+                
+                <div class="site-state-item site-state-tags">
+                  
+                    
+                    
+                      
+                    
+                    <span class="site-state-item-count">1</span>
+                    <span class="site-state-item-name">标签</span>
+                  
+                </div>
               
             </nav>
           
